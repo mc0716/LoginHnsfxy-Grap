@@ -77,7 +77,7 @@ class LoginHnsfxyPhone_Grap{
 
     public function savePhoto($path =''){
         if ($path == '')
-            $path = './src/photo/'."$this->currentStudentNum".'.jpg';
+            $path = './src/public/photo/'."$this->currentStudentNum".'.jpg';
             $this->client->get($this->photoUri.$this->currentStudentNum, [
                 RequestOptions::SINK=>$path,
                 RequestOptions::HTTP_ERRORS => false
