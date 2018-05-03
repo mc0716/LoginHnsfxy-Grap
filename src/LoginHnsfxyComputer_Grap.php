@@ -3,7 +3,6 @@
 namespace MCyunpeng98\LoginHnsfxy_Grap;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\RequestOptions;
 
 class LoginHnsfxyComputer_Grap{
@@ -50,7 +49,7 @@ class LoginHnsfxyComputer_Grap{
         $content = mb_convert_encoding($reponse->getBody()->getContents(), 'UTF-8', 'gbk');
         if (preg_match('/<span id="Label3">欢迎您：<\/span>/',$content)){
             if (preg_match('/<span id="xhxm">(.+)<\/span><\/em>/',$content,$d)){
-                $this->studentName =  urlencode(mb_convert_encoding(mb_substr($d[1],0,mb_strlen($d[1])-2),'gb2312','utf-8'));
+                $this->studentName = mb_substr($d[1],0,mb_strlen($d[1])-2);
             }
         }else{
             $this->newLoginHnsfxyComputer();
@@ -60,12 +59,34 @@ class LoginHnsfxyComputer_Grap{
 
     public function studentInfo(){
         $d = [];
-//        http://211.70.176.123/xsgrxx.aspx?xh=1608220221&xm=%C2%ED%B8%A3%B3%AC&gnmkdm=N121501
-        $reponse = $this->client->get($this->studentInfoUri."$this->studentNum".'&xm='."$this->studentName".'&gnmkdm=N121501',[
-            'allow_redirects' => false
+        $studentNameUrl = urlencode(mb_convert_encoding($this->studentName,'gb2312','utf-8'));
+        $reponse = $this->client->get($this->studentInfoUri."$studentNameUrl".'&xm='."$this->studentName".'&gnmkdm=N121501',[
+            'allow_redirects'=> [
+                'max'             => false,
+                'strict'          => false,
+                'referer'         => true,
+                'protocols'       => ['http', 'https'],
+                'track_redirects' => false
+            ]
         ]);
         $content = mb_convert_encoding($reponse->getBody()->getContents(), 'UTF-8', 'gbk');
-        echo $content;
+        if (preg_match('/<TD><span id="lbl_xb">(.+)<\/span><\/TD>[\s\S]+?<TD><span id="lbl_xy">(.+)<\/span><\/TD>[\s\S]+?<TD><span id="lbl_zymc">(.+)<\/span><\/TD>/',$content,$d)){
+            $info = [
+                //学生姓名
+                'student_name' => $this->studentName,
+                //学生学号
+                'student_num' =>$this->studentNum,
+                //学生性别
+                'student_xb' => $d[1],
+                //学生学院
+                'student_xy' => $d[2],
+                //学生专业+班级
+                'student_zybj' => $d[3],
+                //学生教务处密码
+                'student_password' => $this->studentPassword
+            ];
+            return $info;
+        }
     }
 
 //    public function savePhoto($path =''){
