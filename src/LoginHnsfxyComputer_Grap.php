@@ -85,7 +85,6 @@ class LoginHnsfxyComputer_Grap{
         }
 
         $content = mb_convert_encoding($reponse->getBody()->getContents(), 'UTF-8', 'gbk');
-        echo $content;
         if (preg_match('/<img id="xszp" src="(.+)" alt="照片" align="AbsMiddle" border="0" height="210" width="150" \/>[\s\S]+?<TD><span id="lbl_xb">(.+)<\/span><\/TD>[\s\S]+?<TD><span id="lbl_xy">(.+)<\/span><\/TD>[\s\S]+?<TD><span id="lbl_zymc">(.+)<\/span><\/TD>/',$content,$d)){
             $this->photoUri = $d[1];
             $info = [
