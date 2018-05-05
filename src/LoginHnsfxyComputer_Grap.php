@@ -32,6 +32,11 @@ class LoginHnsfxyComputer_Grap{
         }
     }
 
+    /**
+     * Step.1 登录进网页版教务处
+     * @param $studentNum 学号
+     * @param $studentPassword 密码
+     */
     public function LoginHnsfxyComputer($studentNum,$studentPassword){
         $d = [];
         $this->studentNum = $studentNum;
@@ -57,6 +62,10 @@ class LoginHnsfxyComputer_Grap{
         }
     }
 
+    /**
+     * Step.2 从教务处获取学生的信息
+     * @return array 返回学生信息
+     */
     public function studentInfo(){
         $d = [];
         $studentNameUrl = urlencode(mb_convert_encoding($this->studentName,'gb2312','utf-8'));
@@ -116,6 +125,9 @@ class LoginHnsfxyComputer_Grap{
 //        return $path;
 //    }
 
+    /**
+     * 获取教务处的验证码
+     */
     private function disCaptcha(){
         $path = './src/public/captcha/captcha.jpg';
         $this->client->get($this->captchaUri,[
@@ -135,6 +147,9 @@ class LoginHnsfxyComputer_Grap{
         $this->captcha = $code->captcha_label;
     }
 
+    /**
+     * 获取隐藏的字段
+     */
     private function getViewstate(){
         $d = [];
         $reponse = $this->client->get('/');
@@ -144,6 +159,9 @@ class LoginHnsfxyComputer_Grap{
         }
     }
 
+    /**
+     * 验证码识别错误从新识别登录
+     */
     private function newLoginHnsfxyComputer(){
         $this->disCaptcha();
         $this->LoginHnsfxyComputer($this->studentNum,$this->studentPassword);

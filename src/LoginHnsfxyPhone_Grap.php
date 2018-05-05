@@ -43,17 +43,15 @@ class LoginHnsfxyPhone_Grap{
     }
 
     /**
-     * @return mixed|string
+     * Step.2获取学生信息
+     * @return mixed|string 返回学生的信息
      */
     public function getStudentInfo(){
-        $reponse = null;
         $d = [];
         $reponse = $this->client->get($this->studentInfoUri,[
             RequestOptions::COOKIES => $this->cookies
         ]);
         $content = mb_convert_encoding($reponse->getBody()->getContents(), 'UTF-8', 'gbk');
-//        echo '<textarea>'.((string) $content).'</textarea>';
-
         if (preg_match('/<IMG SRC="\.\.\/dbsdb\/tp\.asp\?xh=(\d{10})" width="120" height="160">[\s\S]+?<font color=red>(.+)<\/font>[\s\S]+?班级[\s\S]+?<td align="center" width="170" height="22" valign="middle">(.+)<\/td>[\s\S]+?<td align="center" width="150" height="22" valign="middle">(.+)<\/td>[\s\S]+?政治面貌<\/font><\/td>[\s\S]+?<td align="center" width="170" height="22" valign="middle">(.+)<\/td>/'
                                 ,$content,$d))
         {
@@ -74,6 +72,11 @@ class LoginHnsfxyPhone_Grap{
         }
     }
 
+    /**
+     * Step.3获取该学生头像
+     * @param string $path 头像存储路径
+     * @return string 返回照片路径
+     */
     public function savePhoto($path =''){
         if ($path == '')
             $path = './src/public/photo/'."$this->currentStudentNum".'.jpg';

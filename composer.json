@@ -12,7 +12,7 @@
   },
   "autoload":{
     "psr-4":{
-      "MCyunpeng98\\LoginHnsfxy_Grap\\": "src"
+      "MCyunpeng98\\LoginHnsfxy_Grap\\": "src/"
     }
   }
 }
