@@ -16,7 +16,7 @@ class LoginHnsfxyPhone_Grap{
     private $cookies = null;
     public function __construct(Client $client = null)
     {
-        if ($this->client == NULL){
+        if ($client == NULL){
             $client = new Client([
                 'base_uri' => $this->homeUri,
                 'timeout' => 5,
@@ -40,7 +40,6 @@ class LoginHnsfxyPhone_Grap{
                     'sfzh' => $idCard,
                 ]
         ]);
-        $content = mb_convert_encoding($reponse->getBody(), 'UTF-8', 'gbk');
     }
 
     /**
