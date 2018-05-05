@@ -3,6 +3,7 @@
 namespace MCyunpeng98\LoginHnsfxy_Grap;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\RequestOptions;
 
 class LoginHnsfxyComputer_Grap{
@@ -60,15 +61,21 @@ class LoginHnsfxyComputer_Grap{
     public function studentInfo(){
         $d = [];
         $studentNameUrl = urlencode(mb_convert_encoding($this->studentName,'gb2312','utf-8'));
-        $reponse = $this->client->get($this->studentInfoUri."$studentNameUrl".'&xm='."$this->studentName".'&gnmkdm=N121501',[
-            'allow_redirects'=> [
-                'max'             => false,
-                'strict'          => false,
-                'referer'         => true,
-                'protocols'       => ['http', 'https'],
-                'track_redirects' => false
-            ]
-        ]);
+        try{
+            $reponse = $this->client->get($this->studentInfoUri."$this->studentNum".'&xm='."$studentNameUrl".'&gnmkdm=N121501',[
+                'allow_redirects'=> [
+                    'max'             => 50,
+                    'strict'          => false,
+                    'referer'         => true,
+                    'protocols'       => ['http', 'https'],
+                    'track_redirects' => false
+                ]
+            ]);
+        }catch (RequestException $e){
+            echo $e->getRequest();
+            echo $e->getResponse();
+        }
+
         $content = mb_convert_encoding($reponse->getBody()->getContents(), 'UTF-8', 'gbk');
         if (preg_match('/<TD><span id="lbl_xb">(.+)<\/span><\/TD>[\s\S]+?<TD><span id="lbl_xy">(.+)<\/span><\/TD>[\s\S]+?<TD><span id="lbl_zymc">(.+)<\/span><\/TD>/',$content,$d)){
             $info = [
